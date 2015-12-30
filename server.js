@@ -1,5 +1,5 @@
 var http = require('http');
-var OdParser = require('./odparser.js');
+var OdUriParser = require('./oduriparser.js');
 
 // HTTP server
 // ==========
@@ -9,7 +9,7 @@ var server = http.Server();
 server.on('request', function(req, res) {
 
   // TODO: need to figure out which query types to handle as streams
-  // and whoch ones to just consume all data and then create SQL
+  // and which ones to just consume all data and then create SQL
   var data = '';
   req.on('data', function(chunk) { data += chunk });
   req.on('end', function(){console.log('end in request:', data)});
@@ -17,7 +17,7 @@ server.on('request', function(req, res) {
   res.on('finish', function(){console.log('finish in response')});
 
   console.log('processing request: ', req.url);
-  var op = new OdParser();
+  var op = new OdUriParser();
   var ast = op.parseUri(req.method, req.url);
   res.write(JSON.stringify(ast));
   res.end();
