@@ -2,13 +2,19 @@
   "name": "odparser",
   "version": "0.0.1",
   "description": "Parse OData URI:s",
-  "main": "index.js",
+  "main": "odparser.js",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/gizur/odparser.git"
+  },
   "scripts": {
     "test": "node test.js"
   },
   "author": "Jonas Colmsjö",
   "license": "MIT",
   "dependencies": {
+    "gzhelpers": "^0.1.0",
+    "gzmiddleware": "^0.1.0",
     "underscore": "^1.8.3"
   }
 }

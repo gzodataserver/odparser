@@ -11,6 +11,10 @@ var debug = console.log.bind(console, 'DEBUG');
 var info = console.info.bind(console);
 var error = console.error.bind(console);
 
+
+var SYS_PATH = 's'
+var DEFAULT_ROW_COUNT = 100;
+
 // ODataUri2Sql class
 // ===================
 
@@ -159,7 +163,7 @@ var filter2where = function(expr) {
 
 var odata2sql = function(param, key) {
   // Default number of rows to return
-  var defaultRowCount = global.CONFIG.ODATA.DEFAULT_ROW_COUNT;
+  var defaultRowCount = DEFAULT_ROW_COUNT;
 
   // `id` is used to sort the statements in the right order
   switch (key) {
@@ -301,7 +305,7 @@ var parseBasicUri = function(method, tokens) {
 var parseSystemUri = function(method, tokens) {
   if (method === 'POST' &&
     tokens.length === 3 &&
-    tokens[1] === global.CONFIG.ODATA.SYS_PATH && ['reset_password',
+    tokens[1] === SYS_PATH && ['reset_password',
       'delete_account', 'create_bucket',
       'drop_bucket', 'create_table', 'grant', 'revoke', 'delete_table'
     ].indexOf(tokens[2]) !== -1) {
@@ -386,11 +390,11 @@ var parseTableUri = function(method, tokens) {
 };
 
 // Just an empty constructor
-ODataUri2Sql = function() {
+Odp = function() {
   var self = this;
 };
 
-ODataUri2Sql.prototype.parseUri2 = function(method, inputUri) {
+Odp.prototype.parseUri = function(method, inputUri) {
   var url = require('url');
   var parsedUri_ = url.parse(inputUri, true, false);
 
@@ -462,4 +466,4 @@ ODataUri2Sql.prototype.parseUri2 = function(method, inputUri) {
 // exports
 // ========
 
-module.exports = ODataUri2Sql;
+module.exports = Odp;
