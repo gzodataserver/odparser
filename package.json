@@ -1,0 +1,14 @@
+{
+  "name": "odparser",
+  "version": "0.0.1",
+  "description": "Parse OData URI:s",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "author": "Jonas Colmsjö",
+  "license": "MIT",
+  "dependencies": {
+    "underscore": "^1.8.3"
+  }
+}
