@@ -14,8 +14,10 @@ var error = console.error.bind(console);
 
 var EMAIL = 'joe@example.com';
 var ACCOUNTID = 'accountid';
+var PASSWORD = 'password';
 var EMAIL2 = 'joe@example.com';
 var ACCOUNTID2 = 'accountid';
+var PASSWORD2 = 'password2';
 var SYS_PATH = '/s';
 
 // Tests
@@ -24,6 +26,11 @@ var SYS_PATH = '/s';
 var options = {
   hostname: 'localhost',
   port: 3000,
+  headers: {
+    user: ACCOUNTID,
+    database: ACCOUNTID,    // I DON'T THINK THIS IS USED??
+    password: PASSWORD
+  }
 };
 
 console.log('A web server should be running on localhost:3000');

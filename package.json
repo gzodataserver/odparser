@@ -8,7 +8,8 @@
     "url": "git+ssh://git@github.com/gizur/odparser.git"
   },
   "scripts": {
-    "test": "node test.js"
+    "test": "node test.js",
+    "start": "node -e 'require(\"./server.js\").run()'"
   },
   "author": "Jonas Colmsjö",
   "license": "MIT",

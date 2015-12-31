@@ -11,8 +11,10 @@ var debug = console.log.bind(console, 'DEBUG');
 var info = console.info.bind(console);
 var error = console.error.bind(console);
 
+// Some constants
+// ==============
 
-var SYS_PATH = 's'
+var SYS_PATH = 's';
 var DEFAULT_ROW_COUNT = 100;
 
 // ODataUri2Sql class
