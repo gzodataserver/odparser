@@ -47,8 +47,8 @@ util.inherits(OdParser, OdUriParser);
 OdParser.prototype.parseReq = function (req) {
   var ast = this.parseUri(req.method, req.url);
 
-  ast.admin_op = isAdminOp(ast.queryType);
-  ast.bucket_op = isBucketOp(ast.queryType, ast.table);
+  ast.adminOp = isAdminOp(ast.queryType);
+  ast.bucketOp = isBucketOp(ast.queryType, ast.table);
 
   if (req.headers.hasOwnProperty('user'))
     ast.user = req.headers.user;
