@@ -4,6 +4,9 @@
 var http = require('http');
 var OdParser = require('./odparser.js');
 
+var Update = require('json2sql').Update;
+var Insert = require('json2sql').Insert;
+
 // Setup logging
 // =============
 
@@ -18,9 +21,16 @@ var error = console.error.bind(console);
 var server = http.Server();
 
 server.on('request', function(req, res) {
+  req.on('close', function(){console.log('close in request')});
   res.on('finish', function(){console.log('finish in response')});
 
-  (new OdParser(req)).pipe(res);
+  console.log('processing request: ', req.url);
+  var ast = new OdParser().parseReq(req);
+  res.write(JSON.stringify(ast));
+  
+  if (ast.queryType === 'insert' && !ast.bucket_op) req.pipe(new Insert(null, ast.schema, ast.table)).pipe(res);
+  else if (ast.queryType === 'update') req.pipe(new Update(null, ast.schema, ast.table)).pipe(res);
+  else res.end();
 });
 
 

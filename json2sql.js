@@ -10,6 +10,14 @@ var Transform = require('stream').Transform;
 var u = require('underscore');
 var Parser = require('jsonparse');
 
+// Setup logging
+// =============
+
+var log = console.log.bind(console);
+var debug = console.log.bind(console, 'DEBUG');
+var info = console.info.bind(console);
+var error = console.error.bind(console);
+
 // update
 // ======
 
@@ -23,29 +31,29 @@ function TS1(options, db, table) {
 
   Transform.call(this, options);
 
-  this.on('finish', function() {
+  this.on('finish', function () {
     console.error('finish in transform');
   });
 
   this.p = new Parser();
-  this.p.onValue = function(value) {
+  this.p.onValue = function (value) {
     // this refers to the Parser's this (not the stream)
-    if(this.stack.length === 0) {
+    if (this.stack.length === 0) {
       self.push(json2update(db, table, value));
     }
   };
 };
 
-TS1.prototype._transform = function(chunk, encoding, done) {
+TS1.prototype._transform = function (chunk, encoding, done) {
   this.p.write(chunk.toString());
   done();
 };
 
 // build update sql from json object
-json2update = function(database, tableName, data) {
+json2update = function (database, tableName, data) {
 
   // {k1: v1, k2: v2} -> k1=v1,k2=v2
-  var str = u.map(data, function(k, v) {
+  var str = u.map(data, function (k, v) {
     return v + '=' + k;
   }).join(',');
 
@@ -67,25 +75,29 @@ function TS2(options, db, table) {
 
   Transform.call(this, options);
 
-  this.on('finish', function() {
+  this.on('finish', function () {
     console.error('finish in transform');
   });
 
   this.p = new Parser();
-  this.p.onValue = function(value) {
+  this.p.onValue = function (value) {
     // this refers to the Parser's this (not the stream)
-    if(this.stack.length === 0) {
+    if (this.stack.length === 0) {
       self.push(json2insert(db, table, value));
     }
   };
 };
 
-TS2.prototype._transform = function(chunk, encoding, done) {
-  this.p.write(chunk.toString());
+TS2.prototype._transform = function (chunk, encoding, done) {
+  try {
+    this.p.write(chunk.toString());
+  } catch (e) {
+    error('ERROR in json2sql, likely in valid JSON: ' + e);
+  }
   done();
 };
 
-json2insert = function(database, tableName, data) {
+json2insert = function (database, tableName, data) {
 
   // separate keys (columns names) and values into separate strings
   // values have quotes but column names don't
@@ -107,4 +119,3 @@ json2insert = function(database, tableName, data) {
 module.exports = {};
 module.exports.Update = TS1;
 module.exports.Insert = TS2;
-

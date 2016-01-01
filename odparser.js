@@ -1,27 +1,8 @@
-// OdParser is a readable stream that is created with a http request.
-// It should buffer all data from the http request and
-// should call push when both 'on end' has occurred and _read has been called
-//
-//```
-// push_data()
-//   if(req_end && read_called)  push
-//
-// _read()
-//   read_called = true
-//   push_data
-//
-// on_end()
-//   req_end = true
-//   push_data
-//```
-
-
 // imports
 // =======
 
-var util = require('util');
-var Readable = require('stream').Readable;
 var OdUriParser = require('./oduriparser.js');
+var util = require('util');
 
 // Setup logging
 // =============
@@ -58,82 +39,27 @@ var isBucketOp = function (op, table) {
 // OdParser class - a readable stream (not a transform) based on a http request
 // ============================================================================
 
-RS = function (req, options) {
-  var self = this;
+OdParser = function () {
+  OdUriParser.call(this);
+};
+util.inherits(OdParser, OdUriParser);
 
-  Readable.call(self, options);
+OdParser.prototype.parseReq = function (req) {
+  var ast = this.parseUri(req.method, req.url);
 
-  self.on('finish', function() {
-    error('finish in readable');
-  });
-
-  self.request = req;
-  self.data = '';
-  self.readCalled = false;
-  self.reqEnded = false;
-
-  log('processing request: ', req.url);
-  var op = new OdUriParser();
-  self.ast = op.parseUri(req.method, req.url);
+  ast.admin_op = isAdminOp(ast.queryType);
+  ast.bucket_op = isBucketOp(ast.queryType, ast.table);
 
   if (req.headers.hasOwnProperty('user'))
-    self.ast.user = req.headers.user;
+    ast.user = req.headers.user;
 
   if (req.headers.hasOwnProperty('password'))
-    self.ast.password = req.headers.password;
+    ast.password = req.headers.password;
 
-  if (isPipeOp(self.ast.queryType)) {
-    debug('Pipe operation');
-  } else {
-    debug('Non-pipe operation');
-  }
-
-  req.on('data', function (chunk) {
-    chunk = chunk.toString();
-    self.data += chunk;
-  });
-
-  req.on('end', function () {
-    self.ast.admin_op = isAdminOp(self.ast.queryType);
-    self.ast.bucket_op = isBucketOp(self.ast.queryType, self.ast.table);
-
-    // parse data as json if it isn't a bucket operation
-    if (self.data !== '' && !self.ast.bucket_op) {
-      try {
-        self.data = JSON.parse(self.data);
-      } catch (e) {
-        var msg = 'ERROR: could not parse data into JSON - ' + self.data;
-        error(msg);
-        self.ast.data = msg;
-      }
-    }
-    self.ast.data = self.data;
-
-    self.reqEnded = true;
-    self._pushData();
-  });
-
-};
-util.inherits(RS, Readable);
-
-RS.prototype._read = function () {
-  this.readCalled = true;
-  this._pushData();
-};
-
-RS.prototype._pushData = function() {
-  if (this.readCalled && this.reqEnded) {
-    this.readCalled = this.reqEnded = false;
-
-    // write everything at once
-    this.push(JSON.stringify(this.ast));
-
-    // all data pushed
-    this.push(null);
-  }
+  return ast;
 };
 
 // exports
 // ======
 
-module.exports = RS;
+module.exports = OdParser;
