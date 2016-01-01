@@ -30,7 +30,7 @@ server.on('request', function(req, res) {
   
   if (ast.queryType === 'insert' && !ast.bucket_op) req.pipe(new Insert(null, ast.schema, ast.table)).pipe(res);
   else if (ast.queryType === 'update') req.pipe(new Update(null, ast.schema, ast.table)).pipe(res);
-  else res.end();
+  else req.pipe(res);
 });
 
 
