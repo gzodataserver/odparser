@@ -2,6 +2,7 @@
 // =======
 
 var u = require('underscore');
+var url = require('url');
 
 // Setup logging
 // =============
@@ -397,7 +398,6 @@ Odp = function() {
 };
 
 Odp.prototype.parseUri = function(method, inputUri) {
-  var url = require('url');
   var parsedUri_ = url.parse(inputUri, true, false);
 
   // get the schema and table name

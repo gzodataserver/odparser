@@ -1,14 +1,91 @@
+// Transform json into sql for insert and update (using streams)
+
+
 // imports
 // ========
 
+var util = require('util');
+var Transform = require('stream').Transform;
+
 var u = require('underscore');
+var Parser = require('jsonparse');
 
-// json2sql
-// ========
+// update
+// ======
 
-h = {};
+util.inherits(TS1, Transform);
 
-h.json2insert = function(database, tableName, data) {
+function TS1(options, db, table) {
+  var self = this;
+
+  if (!(this instanceof TS1))
+    return new TS1(options);
+
+  Transform.call(this, options);
+
+  this.on('finish', function() {
+    console.error('finish in transform');
+  });
+
+  this.p = new Parser();
+  this.p.onValue = function(value) {
+    // this refers to the Parser's this (not the stream)
+    if(this.stack.length === 0) {
+      self.push(json2update(db, table, value));
+    }
+  };
+};
+
+TS1.prototype._transform = function(chunk, encoding, done) {
+  this.p.write(chunk.toString());
+  done();
+};
+
+// build update sql from json object
+json2update = function(database, tableName, data) {
+
+  // {k1: v1, k2: v2} -> k1=v1,k2=v2
+  var str = u.map(data, function(k, v) {
+    return v + '=' + k;
+  }).join(',');
+
+  // The update query
+  var update = 'update ' + database + '.' + tableName + ' set ' + str + ';';
+  return update;
+};
+
+// insert
+// ======
+
+util.inherits(TS2, Transform);
+
+function TS2(options, db, table) {
+  var self = this;
+
+  if (!(this instanceof TS2))
+    return new TS2(options);
+
+  Transform.call(this, options);
+
+  this.on('finish', function() {
+    console.error('finish in transform');
+  });
+
+  this.p = new Parser();
+  this.p.onValue = function(value) {
+    // this refers to the Parser's this (not the stream)
+    if(this.stack.length === 0) {
+      self.push(json2insert(db, table, value));
+    }
+  };
+};
+
+TS2.prototype._transform = function(chunk, encoding, done) {
+  this.p.write(chunk.toString());
+  done();
+};
+
+json2insert = function(database, tableName, data) {
 
   // separate keys (columns names) and values into separate strings
   // values have quotes but column names don't
@@ -20,24 +97,14 @@ h.json2insert = function(database, tableName, data) {
 
   // The insert query
   var insert = 'insert into ' + database + '.' + tableName +
-    '(' + k + ') values(' + v + ')';
+    '(' + k + ') values(' + v + ');';
   return insert;
-};
-
-// build update sql from json object
-h.json2update = function(database, tableName, data) {
-
-  // {k1: v1, k2: v2} -> k1=v1,k2=v2
-  var str = u.map(data, function(k, v) {
-    return v + '=' + k;
-  }).join(',');
-
-  // The update query
-  var update = 'update ' + database + '.' + tableName + ' set ' + str;
-  return update;
 };
 
 // exports
 // =======
 
-module.exports = h;
+module.exports = {};
+module.exports.Update = TS1;
+module.exports.Insert = TS2;
+

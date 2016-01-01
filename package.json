@@ -16,6 +16,7 @@
   "dependencies": {
     "gzhelpers": "^0.1.0",
     "gzmiddleware": "^0.1.0",
+    "jsonparse": "^1.2.0",
     "underscore": "^1.8.3"
   }
 }
