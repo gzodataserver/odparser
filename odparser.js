@@ -1,3 +1,21 @@
+// OdParser is a readable stream that is created with a http request.
+// It should buffer all data from the http request and
+// should call push when both 'on end' has occurred and _read has been called
+//
+//```
+// push_data()
+//   if(req_end && read_called)  push
+//
+// _read()
+//   read_called = true
+//   push_data
+//
+// on_end()
+//   req_end = true
+//   push_data
+//```
+
+
 // imports
 // =======
 
@@ -45,15 +63,14 @@ RS = function (req, options) {
 
   Readable.call(self, options);
 
-  // wait until all data has been read from the http request
-  self.pause();
-
   self.on('finish', function() {
     error('finish in readable');
   });
 
   self.request = req;
   self.data = '';
+  self.readCalled = false;
+  self.reqEnded = false;
 
   log('processing request: ', req.url);
   var op = new OdUriParser();
@@ -92,24 +109,28 @@ RS = function (req, options) {
     }
     self.ast.data = self.data;
 
-    // consumed all data in http request, now can data be read from this stream
-    self.resume();
-
-    log('end in request, data:', self.data);
-    log('ast:', self.ast);
-
+    self.reqEnded = true;
+    self._pushData();
   });
 
 };
 util.inherits(RS, Readable);
 
 RS.prototype._read = function () {
-  log('in _read:', this.ast)
-  // write everything at once
-  this.push(JSON.stringify(this.ast));
+  this.readCalled = true;
+  this._pushData();
+};
 
-  // all data pushed
-  this.push(null);
+RS.prototype._pushData = function() {
+  if (this.readCalled && this.reqEnded) {
+    this.readCalled = this.reqEnded = false;
+
+    // write everything at once
+    this.push(JSON.stringify(this.ast));
+
+    // all data pushed
+    this.push(null);
+  }
 };
 
 // exports
