@@ -28,7 +28,7 @@ var options = {
   port: 3000,
   headers: {
     user: ACCOUNTID,
-    database: ACCOUNTID,    // I DON'T THINK THIS IS USED??
+    database: ACCOUNTID, // I DON'T THINK THIS IS USED??
     password: PASSWORD
   }
 };
@@ -190,5 +190,62 @@ remote.request(options, {
     return remote.request(options, {
       email: EMAIL
     });
+  })
+  .then(function (res) {
+    console.log(res);
+
+    // FILTER & ORDER BY
+    var params = querystring.stringify({
+      $select: 'col1,col2',
+      $filter: 'co1 eq "help"',
+      $orderby: 'col2',
+      $skip: '10'
+    });
+
+    options.path = '/schema/table?' + params;
+    options.method = 'GET';
+    return remote.request(options, null);
+  })
+  .then(function (res) {
+    console.log(res);
+
+    // FILTER, COLS, ORDER BY
+    var params = querystring.stringify({
+      $select: 'col1,col2',
+      $filter: 'Price add 5 gt 10',
+      $orderby: 'col2'
+    });
+    options.path = '/schema/table?' + params;
+    options.method = 'GET';
+    return remote.request(options, null);
+  })
+  .then(function (res) {
+    console.log(res);
+
+    // ORDER BY
+    var params = querystring.stringify({
+      $orderby: 'col2'
+    });
+    options.path = '/schema/table?' + params;
+    options.method = 'GET';
+    return remote.request(options, null);
+  })
+  .then(function (res) {
+    console.log(res);
+
+    // DROP TABLE
+    options.path = '/' + ACCOUNTID + SYS_PATH + '/delete_table';
+    options.method = 'POST';
+    return remote.request(options, {
+      "tableName": "mytable"
+    });
+  })
+  .then(function (res) {
+    console.log(res);
+
+    // SERVICE DEF
+    options.path = '/' + ACCOUNTID ;
+    options.method = 'GET';
+    return remote.request(options, null);
   })
   .done(console.log.bind(console), console.log.bind(console));

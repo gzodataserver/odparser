@@ -2,10 +2,10 @@
 // =======
 
 var http = require('http');
-var OdParser = require('./odparser.js');
+var OdParser = require('./odparser.js').OdParser;
 
-var Update = require('json2sql').Update;
-var Insert = require('json2sql').Insert;
+var Update = require('./odparser.js').json2sql.Update;
+var Insert = require('./odparser').json2sql.Insert;
 
 // Setup logging
 // =============
