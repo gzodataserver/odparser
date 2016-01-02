@@ -9,12 +9,36 @@ console.log('--- Insert');
 var rs1 = new Readable();
 rs1.push(json);
 rs1.push(null);
-rs1.pipe(new Insert(null,'db','table')).pipe(process.stdout);
+var ins = new Insert(null, 'db', 'table');
+ins.on('error', console.log.bind(console));
+rs1.pipe(ins).pipe(process.stdout);
 
-setTimeout(function(){
-    console.log('--- Update');
-    var rs2 = new Readable();
-    rs2.push(json);
-    rs2.push(null);
-    rs2.pipe(new Update(null,'db','table')).pipe(process.stdout);    
+setTimeout(function () {
+  console.log('--- Insert');
+  var rs1 = new Readable();
+  rs1.push(json + '...');
+  rs1.push(null);
+  var ins = new Insert(null, 'db', 'table');
+  ins.on('error', console.log.bind(console));
+  rs1.pipe(ins).pipe(process.stdout);
 }, 1000);
+
+setTimeout(function () {
+  console.log('--- Update');
+  var rs2 = new Readable();
+  rs2.push(json);
+  rs2.push(null);
+  var upd = new Update(null, 'db', 'table');
+  upd.on('error', console.log.bind(console));
+  rs2.pipe(upd).pipe(process.stdout);
+}, 2000);
+
+setTimeout(function () {
+  console.log('--- Update');
+  var rs2 = new Readable();
+  rs2.push(json + '...');
+  rs2.push(null);
+  var upd = new Update(null, 'db', 'table');
+  upd.on('error', console.log.bind(console));
+  rs2.pipe(upd).pipe(process.stdout);
+}, 3000);

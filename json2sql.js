@@ -45,7 +45,13 @@ function TS1(options, db, table) {
 };
 
 TS1.prototype._transform = function (chunk, encoding, done) {
-  this.p.write(chunk.toString());
+  try {
+    this.p.write(chunk.toString());
+  } catch (e) {
+    var msg = 'ERROR in json2sql.Update, likely invalid JSON: ' + e;
+    error(msg);
+    this.emit('error', msg);
+  }
   done();
 };
 
@@ -76,7 +82,7 @@ function TS2(options, db, table) {
   Transform.call(this, options);
 
   this.on('finish', function () {
-    console.error('finish in transform');
+    debug('finish in transform');
   });
 
   this.p = new Parser();
@@ -92,7 +98,9 @@ TS2.prototype._transform = function (chunk, encoding, done) {
   try {
     this.p.write(chunk.toString());
   } catch (e) {
-    error('ERROR in json2sql, likely in valid JSON: ' + e);
+    var msg = 'ERROR in json2sql.Insert, likely invalid JSON: ' + e;
+    error(msg);
+    this.emit('error', msg);
   }
   done();
 };
