@@ -20,7 +20,7 @@ var BUCKER_PREFIX = 'b_';
 // Check if operation requires admin credentials
 var isAdminOp = function (op) {
   return ['create_account', 'reset_password', 'delete_account',
-    'create_table', 'service_def', 'grant', 'revoke', 'delete_table'
+    'service_def', 'grant', 'revoke'
   ].indexOf(op) !== -1;
 };
 

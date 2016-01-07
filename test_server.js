@@ -20,17 +20,32 @@ var error = console.error.bind(console);
 
 var server = http.Server();
 
-server.on('request', function(req, res) {
-  req.on('close', function(){console.log('close in request')});
-  res.on('finish', function(){console.log('finish in response')});
+server.on('request', function (req, res) {
+  var handleError = function (err) {
+    res.write(err);
+    error(err);
+  };
+
+  req.on('close', function () {
+    console.log('close in request')
+  });
+  res.on('finish', function () {
+    console.log('finish in response')
+  });
 
   console.log('processing request: ', req.url);
   var ast = new OdParser().parseReq(req);
   res.write(JSON.stringify(ast));
-  
-  if (ast.queryType === 'insert' && !ast.bucket_op) req.pipe(new Insert(null, ast.schema, ast.table)).pipe(res);
-  else if (ast.queryType === 'update') req.pipe(new Update(null, ast.schema, ast.table)).pipe(res);
-  else req.pipe(res);
+
+  if (ast.queryType === 'insert' && !ast.bucket_op) {
+    var ins = new Insert(null, ast.schema, ast.table);
+    ins.on('error', handleError);
+    req.pipe(ins).pipe(res);
+  } else if (ast.queryType === 'update') {
+    var upd = new Update(null, ast.schema, ast.table);
+    upd.on('error', handleError);
+    req.pipe(upd).pipe(res);
+  } else req.pipe(res);
 });
 
 
