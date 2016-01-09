@@ -29,7 +29,7 @@ function TS1(options, db, table) {
   if (!(this instanceof TS1))
     return new TS1(options);
 
-  Transform.call(this, options);
+  Transform.call(this, options, db, table);
 
   this.on('finish', function () {
     debug('finish in transform');
@@ -78,7 +78,7 @@ function TS2(options, db, table) {
   if (!(this instanceof TS2))
     return new TS2(options);
 
-  Transform.call(this, options);
+  Transform.call(this, options, db, table);
 
   this.on('finish', function () {
     debug('finish in transform');
