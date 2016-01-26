@@ -59,6 +59,11 @@ OdParser.prototype.parseReq = function (req) {
   return ast;
 };
 
+OdParser.handleRequest = function (req, res, next) {
+  req.ast = new OdParser().parseReq(req);
+  next();
+};
+
 // exports
 // ======
 
