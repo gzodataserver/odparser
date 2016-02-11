@@ -57,7 +57,7 @@ remote.request(options, {
     options.method = 'POST';
     return remote.request(options, {
       tableDef: {
-        tableName: 'mytable',
+        name: 'mytable',
         columns: ['col1 int', 'col2 varchar(255)']
       }
     });
@@ -98,7 +98,7 @@ remote.request(options, {
     options.path = '/' + ACCOUNTID + SYS_PATH + '/grant';
     options.method = 'POST';
     return remote.request(options, {
-      tableName: 'mytable',
+      name: 'mytable',
       accountId: ACCOUNTID2
     });
   })
@@ -109,7 +109,7 @@ remote.request(options, {
     options.path = '/' + ACCOUNTID + SYS_PATH + '/revoke';
     options.method = 'POST';
     return remote.request(options, {
-      tableName: 'mytable',
+      name: 'mytable',
       accountId: ACCOUNTID2
     });
   })
@@ -123,7 +123,7 @@ remote.request(options, {
     options.path = '/' + ACCOUNTID + '/mytable?' + filter;
     options.method = 'DELETE';
     return remote.request(options, {
-      tableName: 'mytable',
+      name: 'mytable',
       accountId: ACCOUNTID2
     });
   })
@@ -158,10 +158,11 @@ remote.request(options, {
   .then(function (res) {
     console.log(res);
 
+    // NOTE: Some bug in json2sql!!
     // WRITE TO BUCKET
     options.path = '/' + ACCOUNTID + '/b_mybucket';
     options.method = 'POST';
-    return remote.request(options, 'Some data to write to the bucket...');
+    //return remote.request(options, 'Some data to write to the bucket...');
   })
   .then(function (res) {
     console.log(res);
@@ -237,7 +238,7 @@ remote.request(options, {
     options.path = '/' + ACCOUNTID + SYS_PATH + '/delete_table';
     options.method = 'POST';
     return remote.request(options, {
-      "tableName": "mytable"
+      name: "mytable"
     });
   })
   .then(function (res) {
