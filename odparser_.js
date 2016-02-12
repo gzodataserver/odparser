@@ -32,7 +32,8 @@ var isPipeOp = function (op) {
 var isBucketOp = function (op, table) {
   // let all operations be valid bucket operations
   // !!table === true|false and not undefined
-  return (!!table && table.substr(0, 2) === BUCKER_PREFIX);
+  return (!!table && table.substr(0, 2) === BUCKER_PREFIX || 
+          ['grant_bucket', 'revoke_bucket'].indexOf(op) !== -1);
 };
 
 

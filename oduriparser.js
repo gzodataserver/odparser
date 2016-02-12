@@ -310,7 +310,7 @@ var parseSystemUri = function(method, tokens) {
     tokens.length === 3 &&
     tokens[1] === SYS_PATH && ['reset_password',
       'delete_account', 'create_bucket',
-      'drop_bucket', 'create_table', 'grant', 'revoke', 'delete_table'
+      'drop_bucket', 'create_table', 'grant', 'grant_bucket', 'revoke', 'revoke_bucket', 'delete_table'
     ].indexOf(tokens[2]) !== -1) {
     return {
       queryType: tokens[2],

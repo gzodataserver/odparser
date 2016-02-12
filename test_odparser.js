@@ -245,8 +245,30 @@ remote.request(options, {
     console.log(res);
 
     // SERVICE DEF
-    options.path = '/' + ACCOUNTID ;
+    options.path = '/' + ACCOUNTID;
     options.method = 'GET';
     return remote.request(options, null);
+  })
+  .then(function (res) {
+    console.log(res);
+
+    // GRANT BUCKET
+    options.path = '/' + ACCOUNTID + SYS_PATH + '/grant_bucket';
+    options.method = 'POST';
+    return remote.request(options, {
+      name: 'b_mybucket',
+      accountId: ACCOUNTID2
+    });
+  })
+  .then(function (res) {
+    console.log(res);
+
+    // REVOKE BUCKET
+    options.path = '/' + ACCOUNTID + SYS_PATH + '/revoke_bucket';
+    options.method = 'POST';
+    return remote.request(options, {
+      name: 'b_mybucket',
+      accountId: ACCOUNTID2
+    });
   })
   .done(console.log.bind(console), console.log.bind(console));

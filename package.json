@@ -1,6 +1,6 @@
 {
   "name": "odparser",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Parse OData URI:s",
   "main": "odparser.js",
   "repository": {
