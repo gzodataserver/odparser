@@ -423,7 +423,7 @@ Odp.prototype.parseUri = function (method, inputUri) {
   var sqlObjects = u.map(parsedUri_.query, odata2sql);
 
   // Build the select statement
-  if (result.queryType === 'select') {
+  if (result.queryType === 'select' || result.queryType === 'etag') {
 
     sqlObjects.push({
       id: 2,
