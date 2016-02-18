@@ -14,7 +14,7 @@ ins.on('error', console.log.bind(console));
 rs1.pipe(ins).pipe(process.stdout);
 
 setTimeout(function () {
-  console.log('--- Insert');
+  console.log('--- Insert that should fail');
   var rs1 = new Readable();
   rs1.push(json + '...');
   rs1.push(null);
@@ -34,7 +34,7 @@ setTimeout(function () {
 }, 2000);
 
 setTimeout(function () {
-  console.log('--- Update');
+  console.log('--- Update that should fail');
   var rs2 = new Readable();
   rs2.push(json + '...');
   rs2.push(null);

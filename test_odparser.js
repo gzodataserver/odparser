@@ -271,4 +271,20 @@ remote.request(options, {
       accountId: ACCOUNTID2
     });
   })
+  .then(function (res) {
+    console.log(res);
+
+    // FILTER & ORDER BY
+    var params = querystring.stringify({
+      $select: 'col1,col2',
+      $filter: 'co1 eq "help"',
+      $orderby: 'col2',
+      $skip: '10'
+    });
+
+    options.path = '/schema/table/$etag?' + params;
+    options.method = 'GET';
+
+    return remote.request(options, null);
+  })
   .done(console.log.bind(console), console.log.bind(console));

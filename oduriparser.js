@@ -76,7 +76,7 @@ var DEFAULT_ROW_COUNT = 100;
 
 // Translate Odata filter operators to sql operators.
 // Strings not matched are just returned as is
-var translateOp = function(s) {
+var translateOp = function (s) {
 
   // translation from OData filter to SQL where clause for the supported operators
   var op = [];
@@ -99,7 +99,7 @@ var translateOp = function(s) {
 };
 
 // take a string with a filter expresssion and translate into a SQL expression
-var filter2where = function(expr) {
+var filter2where = function (expr) {
 
   // check for functions and groupings. These are not supported.
   if (expr.indexOf('(') > -1) {
@@ -164,7 +164,7 @@ var filter2where = function(expr) {
 //         [FOR UPDATE | LOCK IN SHARE MODE]]
 //
 
-var odata2sql = function(param, key) {
+var odata2sql = function (param, key) {
   // Default number of rows to return
   var defaultRowCount = DEFAULT_ROW_COUNT;
 
@@ -214,11 +214,11 @@ var odata2sql = function(param, key) {
 //
 // Take the json object created by `odata2sql`, sort them in the correct order
 // create a string with the SQL
-var reduce = function(sqlObjects) {
+var reduce = function (sqlObjects) {
   // create a string from the objects
   return u.reduce(
     sqlObjects,
-    function(memo, o) {
+    function (memo, o) {
       return memo + o.q;
     },
     "");
@@ -232,7 +232,7 @@ var reduce = function(sqlObjects) {
 // This BNF describes the operations that the OData server support.
 //
 // ```
-// slash ('/'') is the delimiter for tokens
+// slash ('/') is the delimiter for tokens
 //
 // URI like: /help
 // <method,uri>        ::= basic_uri
@@ -257,6 +257,7 @@ var reduce = function(sqlObjects) {
 //
 // URI like /account/table/$metadata
 // <method, metadata_uri> ::= <GET, variable variable '$metdata'>
+//                     |      <GET, variable variable '$etag'>
 //
 // URI like /account/table
 // <method,table_uri>  ::= <GET,variable>             -> [service_def,account]
@@ -268,7 +269,7 @@ var reduce = function(sqlObjects) {
 // variable            ::= SQL schema or table name
 // ```
 
-var parseUri = function(method, tokens) {
+var parseUri = function (method, tokens) {
   var res = parseBasicUri(method, tokens) || parseSystemUri(method, tokens) ||
     parseMetadataUri(method, tokens) || parseTableUri(method, tokens);
 
@@ -284,7 +285,7 @@ var parseUri = function(method, tokens) {
 };
 
 // URI:s like `/help` and `/create_account`
-var parseBasicUri = function(method, tokens) {
+var parseBasicUri = function (method, tokens) {
   debug('parseBasicUri method: ' + method + ' tokens: ' + tokens);
 
   if (method === 'GET' && tokens[0] === 'help' &&
@@ -305,7 +306,7 @@ var parseBasicUri = function(method, tokens) {
 };
 
 // URI:s like `/account/s/create_table`
-var parseSystemUri = function(method, tokens) {
+var parseSystemUri = function (method, tokens) {
   if (method === 'POST' &&
     tokens.length === 3 &&
     tokens[1] === SYS_PATH && ['reset_password',
@@ -333,7 +334,7 @@ var parseSystemUri = function(method, tokens) {
 };
 
 // URI:s like `/account/table/$metdata`
-var parseMetadataUri = function(method, tokens) {
+var parseMetadataUri = function (method, tokens) {
   if (method === 'GET' &&
     tokens.length === 3 &&
     tokens[2] === '$metadata') {
@@ -344,11 +345,21 @@ var parseMetadataUri = function(method, tokens) {
     };
   }
 
+  if (method === 'GET' &&
+    tokens.length === 3 &&
+    tokens[2] === '$etag') {
+    return {
+      queryType: 'etag',
+      schema: tokens[0],
+      table: tokens[1]
+    };
+  }
+
   return false;
 };
 
 // URI:s like `/account` or `/account/table`, `tokens = [account,table]`
-var parseTableUri = function(method, tokens) {
+var parseTableUri = function (method, tokens) {
   if (method === 'GET' && tokens.length === 1) {
     return {
       queryType: 'service_def',
@@ -393,11 +404,11 @@ var parseTableUri = function(method, tokens) {
 };
 
 // Just an empty constructor
-Odp = function() {
+Odp = function () {
   var self = this;
 };
 
-Odp.prototype.parseUri = function(method, inputUri) {
+Odp.prototype.parseUri = function (method, inputUri) {
   var parsedUri_ = url.parse(inputUri, true, false);
 
   // get the schema and table name
@@ -420,7 +431,7 @@ Odp.prototype.parseUri = function(method, inputUri) {
     });
 
     // sort the query objects according to the sql specification
-    sqlObjects = u.sortBy(sqlObjects, function(o) {
+    sqlObjects = u.sortBy(sqlObjects, function (o) {
       return o.id;
     });
 
@@ -445,14 +456,14 @@ Odp.prototype.parseUri = function(method, inputUri) {
   }
 
   // sort the query objects according to the sql specification
-  sqlObjects = u.sortBy(sqlObjects, function(o) {
+  sqlObjects = u.sortBy(sqlObjects, function (o) {
     return o.id;
   });
 
   // create a string from the objects
   var sql = u.reduce(
     sqlObjects,
-    function(memo, o) {
+    function (memo, o) {
       return memo + o.q;
     },
     "");
