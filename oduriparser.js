@@ -190,10 +190,14 @@ var odata2sql = function (param, key) {
 
     case '$select':
       if (param.indexOf('@odata.etag') > -1) {
+        // convert into array
+        var param2 = param.split(',');
+        // remove @odata.etag
+        param2.splice(param2.indexOf('@odata.etag'), 1);
         return {
           id: 1,
           q: 'select *',
-          etagCols: param.replace('@odata.etag','')
+          etagCols: param2
         }
       } else {
         return {
@@ -421,7 +425,7 @@ Odp.prototype.parseUri = function (method, inputUri) {
 
   // Build the select statement
   if (result.queryType === 'select') {
-    
+
     sqlObjects.push({
       id: 2,
       q: ' from ' + result.schema + '.' + result.table
@@ -441,7 +445,7 @@ Odp.prototype.parseUri = function (method, inputUri) {
     }
 
     // save columns to return for etag request in the result
-    if(sqlObjects[0].etagCols) {
+    if (sqlObjects[0].etagCols) {
       result.etagCols = sqlObjects[0].etagCols;
     }
   }
