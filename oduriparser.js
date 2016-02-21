@@ -193,7 +193,7 @@ var odata2sql = function (param, key) {
         return {
           id: 1,
           q: 'select *',
-          etagCols: param 
+          etagCols: param.replace('@odata.etag','')
         }
       } else {
         return {
