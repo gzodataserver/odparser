@@ -189,9 +189,17 @@ var odata2sql = function (param, key) {
       };
 
     case '$select':
-      return {
-        id: 1,
-        q: 'select ' + param
+      if (param.indexOf('@odata.etag') > -1) {
+        return {
+          id: 1,
+          q: 'select *',
+          etagCols: param 
+        }
+      } else {
+        return {
+          id: 1,
+          q: 'select ' + param
+        }
       };
 
     case '$top':
@@ -257,7 +265,6 @@ var reduce = function (sqlObjects) {
 //
 // URI like /account/table/$metadata
 // <method, metadata_uri> ::= <GET, variable variable '$metdata'>
-//                     |      <GET, variable variable '$etag'>
 //
 // URI like /account/table
 // <method,table_uri>  ::= <GET,variable>             -> [service_def,account]
@@ -345,16 +352,6 @@ var parseMetadataUri = function (method, tokens) {
     };
   }
 
-  if (method === 'GET' &&
-    tokens.length === 3 &&
-    tokens[2] === '$etag') {
-    return {
-      queryType: 'etag',
-      schema: tokens[0],
-      table: tokens[1]
-    };
-  }
-
   return false;
 };
 
@@ -423,8 +420,8 @@ Odp.prototype.parseUri = function (method, inputUri) {
   var sqlObjects = u.map(parsedUri_.query, odata2sql);
 
   // Build the select statement
-  if (result.queryType === 'select' || result.queryType === 'etag') {
-
+  if (result.queryType === 'select') {
+    
     sqlObjects.push({
       id: 2,
       q: ' from ' + result.schema + '.' + result.table
@@ -441,6 +438,11 @@ Odp.prototype.parseUri = function (method, inputUri) {
         id: 1,
         q: 'select *'
       });
+    }
+
+    // save columns to return for etag request in the result
+    if(sqlObjects[0].etagCols) {
+      result.etagCols = sqlObjects[0].etagCols;
     }
   }
 

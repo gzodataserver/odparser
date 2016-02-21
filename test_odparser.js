@@ -276,13 +276,13 @@ remote.request(options, {
 
     // FILTER & ORDER BY
     var params = querystring.stringify({
-      $select: 'col1,col2',
+      $select: 'col1,col2,@odata.etag',
       $filter: 'co1 eq "help"',
       $orderby: 'col2',
       $skip: '10'
     });
 
-    options.path = '/schema/table/$etag?' + params;
+    options.path = '/schema/table?' + params;
     options.method = 'GET';
 
     return remote.request(options, null);
