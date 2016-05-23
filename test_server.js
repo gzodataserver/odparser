@@ -36,7 +36,7 @@ server.on('request', function (req, res) {
   console.log('processing request: ', req.url);
   var ast = new OdParser().parseReq(req);
   res.write(JSON.stringify(ast));
-
+  res.write("|");
   if (ast.queryType === 'insert' && !ast.bucket_op) {
     var ins = new Insert(null, ast.schema, ast.table);
     ins.on('error', handleError);
