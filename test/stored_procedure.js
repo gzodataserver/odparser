@@ -39,7 +39,7 @@ var options = {
 //Test cases
 
 describe("Stored Procedure Call", function(){
-    it("with two numeric parameters", function(done){
+    it("should convert odata request to SQL with two numeric parameters", function(done){
 
         remote.request(options, {procedure: "spMyStoredProcedure", params: [1,2]})
         .then(function(responseString){
@@ -52,21 +52,21 @@ describe("Stored Procedure Call", function(){
             var ast = JSON.parse(responseArray[0]);
             var query = responseArray[1];
 
-            expect(ast.queryType).to.equal('exec');
-            expect(ast.schema).to.equal('accountid');
-            expect(ast.adminOp).to.equal(false);
-            expect(ast.bucketOp).to.equal(false);
-            expect(ast.user).to.equal('accountid');
-            expect(ast.password).to.equal('password');
+            expect(ast.queryType, 'topic [ast.queryType]').to.equal('exec');
+            expect(ast.schema, 'topic [ast.schema]').to.equal('accountid');
+            expect(ast.adminOp, 'topic [ast.adminOp]').to.equal(false);
+            expect(ast.bucketOp, 'topic [ast.bucketOp]').to.equal(false);
+            expect(ast.user, 'topic [ast.user]').to.equal('accountid');
+            expect(ast.password, 'topic [ast.password]').to.equal('password');
 
             expect(query).to.equal('CALL accountid.spMyStoredProcedure(1,2)');
         })
-        .done(done, console.log.bind(console, "ERROR"));
+        .done(done, function (errObject) {console.log('ERROR',  errObject.message);});
 
     });
 
 
-    it("with two string parameters", function(done){
+    it("should convert odata request to SQL with two string parameters", function(done){
 
         remote.request(options, {procedure: "spMyStringyStoredProcedure", params: ["Hodor","Winterfel"]})
         .then(function(responseString){
@@ -79,21 +79,21 @@ describe("Stored Procedure Call", function(){
             var ast = JSON.parse(responseArray[0]);
             var query = responseArray[1];
 
-            expect(ast.queryType).to.equal('exec');
-            expect(ast.schema).to.equal('accountid');
-            expect(ast.adminOp).to.equal(false);
-            expect(ast.bucketOp).to.equal(false);
-            expect(ast.user).to.equal('accountid');
-            expect(ast.password).to.equal('password');
+            expect(ast.queryType, 'topic [ast.queryType]').to.equal('exec');
+            expect(ast.schema, 'topic [ast.schema]').to.equal('accountid');
+            expect(ast.adminOp, 'topic [ast.adminOp]').to.equal(false);
+            expect(ast.bucketOp, 'topic [ast.bucketOp]').to.equal(false);
+            expect(ast.user, 'topic [ast.user]').to.equal('accountid');
+            expect(ast.password, 'topic [ast.password]').to.equal('password');
 
             expect(query).to.equal("CALL accountid.spMyStringyStoredProcedure('Hodor','Winterfel')");
         })
-        .done(done, console.log.bind(console, "ERROR"));
+        .done(done, function (errObject) {console.log('ERROR',  errObject.message);});
 
     });
 
 
-    it("with multiple mixed parameters", function(done){
+    it("should convert odata request to SQL with multiple mixed parameters", function(done){
 
         remote.request(options, {procedure: "spMyMixedStoredProcedure", params: [365,"Dragons","Targerian",3,5]})
         .then(function(responseString){
@@ -106,16 +106,16 @@ describe("Stored Procedure Call", function(){
             var ast = JSON.parse(responseArray[0]);
             var query = responseArray[1];
 
-            expect(ast.queryType).to.equal('exec');
-            expect(ast.schema).to.equal('accountid');
-            expect(ast.adminOp).to.equal(false);
-            expect(ast.bucketOp).to.equal(false);
-            expect(ast.user).to.equal('accountid');
-            expect(ast.password).to.equal('password');
+            expect(ast.queryType, 'topic [ast.queryType]').to.equal('exec');
+            expect(ast.schema, 'topic [ast.schema]').to.equal('accountid');
+            expect(ast.adminOp, 'topic [ast.adminOp]').to.equal(false);
+            expect(ast.bucketOp, 'topic [ast.bucketOp]').to.equal(false);
+            expect(ast.user, 'topic [ast.user]').to.equal('accountid');
+            expect(ast.password, 'topic [ast.password]').to.equal('password');
 
             expect(query).to.equal("CALL accountid.spMyMixedStoredProcedure(365,'Dragons','Targerian',3,5)");
         })
-        .done(done, console.log.bind(console, "ERROR"));
+        .done(done, function (errObject) {console.log('ERROR',  errObject.message);});
 
     });
 });
