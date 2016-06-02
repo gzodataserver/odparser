@@ -287,4 +287,15 @@ remote.request(options, {
 
     return remote.request(options, null);
   })
+  .then(function(res) {
+      console.log(res);
+
+      options.path = '/schema/s/exec';
+      options.method = 'POST';
+
+      return remote.request(options, {
+          procedure: "spMyStoredProcedure",
+          params: [1, 2]
+      });
+  })
   .done(console.log.bind(console), console.log.bind(console));
