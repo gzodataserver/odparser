@@ -71,7 +71,7 @@ describe("SQL DELETE", function(){
             expect(ast.bucketOp, 'topic [ast.bucketOp]').to.equal(false);
             expect(ast.user, 'topic [ast.user]').to.equal(ACCOUNTID);
             expect(ast.password, 'topic [ast.password]').to.equal(PASSWORD);
-            expect(ast.sql, 'topic [ast.sql]').to.equal('delete from accountid.mytable where col1 = 22');
+            expect(ast.sql, 'topic [ast.sql]').to.equal(" where col1 = 22");
 
             expect(query.name).to.equal('mytable');
             expect(query.accountId).to.equal('accountid');
