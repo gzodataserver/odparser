@@ -6,6 +6,7 @@
 
 var util = require('util');
 var Transform = require('stream').Transform;
+var Writable = require('stream').Writable;
 
 var u = require('underscore');
 var Parser = require('jsonparse');
@@ -122,7 +123,7 @@ json2insert = function (database, tableName, data) {
 // stored procedure
 // ======
 
-util.inherits(TS3, Transform);
+util.inherits(TS3, Writable);
 
 function TS3(options, db) {
   var self = this;
@@ -130,10 +131,10 @@ function TS3(options, db) {
   if (!(this instanceof TS3))
     return new TS3(options);
 
-  Transform.call(this, options, db);
+  Writable.call(this, options, db);
 
   this.on('finish', function () {
-    debug('finish in transform');
+    debug('finish in write');
   });
 
   this.p = new Parser();
@@ -145,7 +146,7 @@ function TS3(options, db) {
   };
 };
 
-TS3.prototype._transform = function (chunk, encoding, done) {
+TS3.prototype._write = function (chunk, encoding, done) {
   try {
     this.p.write(chunk.toString());
   } catch (e) {
