@@ -40,7 +40,7 @@ var options = {
 //Test cases
 
 describe("Bucket Functions Call", function(){
-    it("should create bucket in correct operation", function(done){
+    it.skip("should create bucket in correct operation", function(done){
 
         // INCORRECT BUCKET ADMIN OP
         options.path = '/' + ACCOUNTID + SYS_PATH + '/create_bucket2';
@@ -67,8 +67,7 @@ describe("Bucket Functions Call", function(){
 
     });
 
-    it("should create bucket", function(done){
-
+    it.skip("should create bucket", function(done){
 
         // CREATE BUCKET
         options.path = '/' + ACCOUNTID + SYS_PATH + '/create_bucket';
@@ -102,26 +101,26 @@ describe("Bucket Functions Call", function(){
 
     });
 
-    it("should write to bucket", function(done){
+    it.skip("should write to bucket", function(done){
 
-        options.path = '/' + ACCOUNTID + '/b_mybucket';
+
+
+        options.path = '/' + ACCOUNTID + SYS_PATH + '/b_mybucket';
         options.method = 'POST';
-        remote.request(options, 'Some data to write to the bucket...')
+        remote.request(options, '{"value": "Some data to write to the bucket..."}')
         .then(function(responseString){
 
             console.log(responseString);
 
             //Response String should be like
-            //{"queryType":"create_table","schema":"accountid","adminOp":false,"bucketOp":false,"user":"accountid","password":"password"}
-            //|{"tableDef":{"name":"mytable","columns":["col1 int","col2 varchar(255)"]}}
-
-            /*
+            //{"queryType":"insert","schema":"accountid","table":"b_mybucket","adminOp":false,"bucketOp":true,"user":"accountid","password":"password"}
+            //|insert into accountid.b_mybucket(value) values("Some data to write to the bucket...");
 
             var responseArray = responseString.split("|");
             var ast = JSON.parse(responseArray[0]);
             var query = JSON.parse(responseArray[1]);
 
-            expect(ast.queryType, 'topic [ast.queryType]').to.equal('create_table');
+            expect(ast.queryType, 'topic [ast.queryType]').to.equal('insert');
             expect(ast.schema, 'topic [ast.schema]').to.equal(ACCOUNTID);
             expect(ast.adminOp, 'topic [ast.adminOp]').to.equal(false);
             expect(ast.bucketOp, 'topic [ast.bucketOp]').to.equal(false);
@@ -130,13 +129,13 @@ describe("Bucket Functions Call", function(){
 
             expect(query.tableDef.name).to.equal('mytable');
             expect(query.tableDef.columns).to.deep.equal(["col1 int","col2 varchar(255)"]);
-            */
+
         })
         .done(done, function (errObject) {console.log('ERROR',  errObject.message);});
 
     });
 
-    it("should select from bucket", function(done){
+    it.skip("should select from bucket", function(done){
 
         // SELECT FROM BUCKET
         options.path = '/' + ACCOUNTID + '/b_mybucket';
@@ -168,7 +167,7 @@ describe("Bucket Functions Call", function(){
 
     });
 
-    it("should drop bucket", function(done){
+    it.skip("should drop bucket", function(done){
 
         // DROP BUCKET
         options.path = '/' + ACCOUNTID + SYS_PATH + '/drop_bucket';
@@ -204,7 +203,7 @@ describe("Bucket Functions Call", function(){
 
     });
 
-    it("should grant bucket", function(done){
+    it.skip("should grant bucket", function(done){
 
         // GRANT BUCKET
         options.path = '/' + ACCOUNTID + SYS_PATH + '/grant_bucket';
@@ -243,7 +242,7 @@ describe("Bucket Functions Call", function(){
 
     });
 
-    it("should revoke bucket", function(done){
+    it.skip("should revoke bucket", function(done){
 
         // REVOKE BUCKET
         options.path = '/' + ACCOUNTID + SYS_PATH + '/revoke_bucket';
