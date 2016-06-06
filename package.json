@@ -12,6 +12,7 @@
     "start": "node test_server.js",
     "test": "node_modules/.bin/mocha",
     "review" : "node_modules/.bin/jshint test/stored_procedure.js"
+    "review" : "node_modules/.bin/jshint test/*.js"
   },
   "author": "Jonas Colmsjö",
   "license": "MIT",
