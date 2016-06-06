@@ -132,4 +132,48 @@ describe("JSON 2 SQL", function(){
         readableStream.pipe(updateTransform).pipe(writableStream);
 
     });
+
+    it("should convert json to stored procedure sql", function(done){
+
+        //var readableStream = new Readable();
+        //var writableStream = new Writable();
+        var response = '';
+
+        var spWritable = new StoredProcedure(null, 'db');
+        spWritable.on('error', console.log.bind(console));
+        spWritable.write('{procedure: "spMyStringyStoredProcedure", params: ["Hodor","Winterfel"]}');
+
+        spWritable.on('finish', function () {
+          expect(response).to.equal('update db.table set col1=22,col2=22,col3=33,col4=44;update db.table set col1=22,col2=22,col3=33,col4=44;');
+          done();
+        });
+
+
+    });
+
+    it("should fail to convert json to stored procedure sql", function(done){
+
+        var readableStream = new Readable();
+        var writableStream = new Writable();
+        var response = '';
+
+        readableStream.push(json + '...');
+        readableStream.push(null);
+        var updateTransform = new Update(null, 'db', 'table');
+        updateTransform.on('error', function(){
+            done();
+        });
+
+        writableStream._write = function (chunk, encoding, doneWritting) {
+            response += chunk.toString();
+            doneWritting();
+        };
+
+        writableStream.on('finish', function () {
+          expect(response).to.not.equal('update db.table set col1=22,col2=22,col3=33,col4=44;update db.table set col1=22,col2=22,col3=33,col4=44;');
+        });
+
+        readableStream.pipe(updateTransform).pipe(writableStream);
+
+    });
 });
