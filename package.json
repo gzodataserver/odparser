@@ -8,14 +8,27 @@
     "url": "git+ssh://git@github.com/gizur/odparser.git"
   },
   "scripts": {
-    "test": "node test_odparser.js",
-    "start": "node test_server.js"
+    "oldtest": "node test_odparser.js",
+    "start": "node test_server.js",
+    "test": "node_modules/.bin/mocha",
+    "review" : "node_modules/.bin/jshint test/*.js"
   },
   "author": "Jonas Colmsjö",
   "license": "MIT",
+  "devDependencies": {
+      "mocha": "2.4.5",
+      "chai":"3.5.0",
+      "jshint": "2.9.2"
+  },
   "dependencies": {
     "gzhelpers": "*",
     "jsonparse": "^1.2.0",
     "underscore": "*"
+  },
+  "jshintConfig" : {
+    "undef": true,
+    "unused": true,
+    "node": true,
+    "mocha": true
   }
 }

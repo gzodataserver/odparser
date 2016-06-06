@@ -4,8 +4,9 @@
 var http = require('http');
 var OdParser = require('./odparser.js').OdParser;
 
-var Update = require('./odparser.js').json2sql.Update;
+var Update = require('./odparser').json2sql.Update;
 var Insert = require('./odparser').json2sql.Insert;
+var StoredProcedure = require('./odparser').json2sql.StoredProcedure;
 
 // Setup logging
 // =============
@@ -36,7 +37,7 @@ server.on('request', function (req, res) {
   console.log('processing request: ', req.url);
   var ast = new OdParser().parseReq(req);
   res.write(JSON.stringify(ast));
-
+  res.write("|");
   if (ast.queryType === 'insert' && !ast.bucket_op) {
     var ins = new Insert(null, ast.schema, ast.table);
     ins.on('error', handleError);
@@ -45,6 +46,10 @@ server.on('request', function (req, res) {
     var upd = new Update(null, ast.schema, ast.table);
     upd.on('error', handleError);
     req.pipe(upd).pipe(res);
+} else if (ast.queryType === 'exec') {
+    var sp = new StoredProcedure(null, ast.schema);
+    sp.on('error', handleError);
+    req.pipe(sp).pipe(res);
   } else req.pipe(res);
 });
 

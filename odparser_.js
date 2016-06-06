@@ -26,7 +26,7 @@ var isAdminOp = function (op) {
 
 // Check if operation should be piped
 var isPipeOp = function (op) {
-  return ['insert', 'update'].indexOf(op) !== -1;
+  return ['insert', 'update', 'stored_procedure'].indexOf(op) !== -1;
 };
 
 var isBucketOp = function (op, table) {
