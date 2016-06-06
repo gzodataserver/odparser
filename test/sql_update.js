@@ -65,7 +65,7 @@ describe("SQL UPDATE", function(){
             expect(ast.user, 'topic [ast.user]').to.equal(ACCOUNTID);
             expect(ast.password, 'topic [ast.password]').to.equal(PASSWORD);
 
-            expect(query).to.equal('update accountid.mytable set col2=33;');
+            expect(query, 'topic [query]').to.equal('update accountid.mytable set col2=33;');
         })
         .done(done, function (errObject) {console.log('ERROR',  errObject.message);});
 

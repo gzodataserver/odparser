@@ -66,7 +66,7 @@ describe("SQL INSERT", function(){
             expect(ast.user, 'topic [ast.user]').to.equal(ACCOUNTID);
             expect(ast.password, 'topic [ast.password]').to.equal(PASSWORD);
 
-            expect(query).to.equal('insert into accountid.mytable(col1,col2) values(22,"22");');
+            expect(query, 'topic [query]').to.equal('insert into accountid.mytable(col1,col2) values(22,"22");');
         })
         .done(done, function (errObject) {console.log('ERROR',  errObject.message);});
 

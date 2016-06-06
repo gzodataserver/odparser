@@ -59,7 +59,7 @@ describe("Stored Procedure Call", function(){
             expect(ast.user, 'topic [ast.user]').to.equal('accountid');
             expect(ast.password, 'topic [ast.password]').to.equal('password');
 
-            expect(query).to.equal('CALL accountid.spMyStoredProcedure(1,2)');
+            expect(query, 'topic [query]').to.equal('CALL accountid.spMyStoredProcedure(1,2)');
         })
         .done(done, function (errObject) {console.log('ERROR',  errObject.message);});
 
@@ -86,7 +86,7 @@ describe("Stored Procedure Call", function(){
             expect(ast.user, 'topic [ast.user]').to.equal('accountid');
             expect(ast.password, 'topic [ast.password]').to.equal('password');
 
-            expect(query).to.equal("CALL accountid.spMyStringyStoredProcedure('Hodor','Winterfel')");
+            expect(query, 'topic [query]').to.equal("CALL accountid.spMyStringyStoredProcedure('Hodor','Winterfel')");
         })
         .done(done, function (errObject) {console.log('ERROR',  errObject.message);});
 
@@ -113,7 +113,7 @@ describe("Stored Procedure Call", function(){
             expect(ast.user, 'topic [ast.user]').to.equal('accountid');
             expect(ast.password, 'topic [ast.password]').to.equal('password');
 
-            expect(query).to.equal("CALL accountid.spMyMixedStoredProcedure(365,'Dragons','Targerian',3,5)");
+            expect(query, 'topic [query]').to.equal("CALL accountid.spMyMixedStoredProcedure(365,'Dragons','Targerian',3,5)");
         })
         .done(done, function (errObject) {console.log('ERROR',  errObject.message);});
 
