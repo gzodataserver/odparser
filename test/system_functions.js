@@ -23,7 +23,7 @@ var ACCOUNTID2 = 'accountid2';
 var ACCOUNTID = 'accountid';
 var SYS_PATH = '/s';
 var PASSWORD = 'password';
-var EMAIL = 'joe@example.com'
+var EMAIL = 'joe@example.com';
 
 var options = {
   hostname: 'localhost',

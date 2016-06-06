@@ -21,9 +21,7 @@ config.showDiff = false;
 //Configure Tests
 
 var ACCOUNTID = 'accountid';
-var SYS_PATH = '/s';
 var PASSWORD = 'password';
-var EMAIL = 'joe@example.com'
 
 var options = {
   hostname: 'localhost',
@@ -55,7 +53,6 @@ describe("SQL SELECT", function(){
 
             var responseArray = responseString.split("|");
             var ast = JSON.parse(responseArray[0]);
-            var query = responseArray[1];
 
             expect(ast.queryType, 'topic [ast.queryType]').to.equal('select');
             expect(ast.schema, 'topic [ast.schema]').to.equal(ACCOUNTID);
@@ -94,7 +91,6 @@ describe("SQL SELECT", function(){
 
             var responseArray = responseString.split("|");
             var ast = JSON.parse(responseArray[0]);
-            var query = responseArray[1];
 
             expect(ast.queryType, 'topic [ast.queryType]').to.equal('select');
             expect(ast.schema, 'topic [ast.schema]').to.equal(ACCOUNTID);
@@ -131,7 +127,6 @@ describe("SQL SELECT", function(){
 
             var responseArray = responseString.split("|");
             var ast = JSON.parse(responseArray[0]);
-            var query = responseArray[1];
 
             expect(ast.queryType, 'topic [ast.queryType]').to.equal('select');
             expect(ast.schema, 'topic [ast.schema]').to.equal(ACCOUNTID);
@@ -166,7 +161,6 @@ describe("SQL SELECT", function(){
 
             var responseArray = responseString.split("|");
             var ast = JSON.parse(responseArray[0]);
-            var query = responseArray[1];
 
             expect(ast.queryType, 'topic [ast.queryType]').to.equal('select');
             expect(ast.schema, 'topic [ast.schema]').to.equal(ACCOUNTID);
@@ -206,7 +200,6 @@ describe("SQL SELECT", function(){
 
             var responseArray = responseString.split("|");
             var ast = JSON.parse(responseArray[0]);
-            var query = responseArray[1];
 
             expect(ast.queryType, 'topic [ast.queryType]').to.equal('select');
             expect(ast.schema, 'topic [ast.schema]').to.equal(ACCOUNTID);
@@ -241,7 +234,6 @@ describe("SQL DESC", function(){
 
             var responseArray = responseString.split("|");
             var ast = JSON.parse(responseArray[0]);
-            var query = responseArray[1];
 
             expect(ast.queryType, 'topic [ast.queryType]').to.equal('metadata');
             expect(ast.schema, 'topic [ast.schema]').to.equal(ACCOUNTID);

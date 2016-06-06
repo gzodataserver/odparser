@@ -23,7 +23,6 @@ var ACCOUNTID = 'accountid';
 var ACCOUNTID2 = 'accountid2';
 var SYS_PATH = '/s';
 var PASSWORD = 'password';
-var EMAIL = 'joe@example.com'
 
 var options = {
   hostname: 'localhost',
@@ -149,9 +148,7 @@ describe("Bucket Functions Call", function(){
             //{"queryType":"select","schema":"accountid","table":"b_mybucket","sql":"select * from accountid.b_mybucket","adminOp":false,"bucketOp":true,"user":"accountid","password":"password"}
 
 
-            var responseArray = responseString.split("|");
-            var ast = JSON.parse(responseArray[0]);
-            var query = responseArray[1];
+            var ast = JSON.parse(responseString);
 
             expect(ast.queryType, 'topic [ast.queryType]').to.equal('select');
             expect(ast.schema, 'topic [ast.schema]').to.equal(ACCOUNTID);
