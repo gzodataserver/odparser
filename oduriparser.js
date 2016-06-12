@@ -485,6 +485,8 @@ Odp.prototype.parseUri = function (method, inputUri) {
     result.sql = sql;
   }
 
+  result.debug = (typeof parsedUri_.query.$debug !== 'undefined');
+
   return result;
 
 };
