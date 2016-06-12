@@ -287,6 +287,23 @@ remote.request(options, {
 
     return remote.request(options, null);
   })
+  .then(function (res) {
+    console.log(res);
+
+    // FILTER & ORDER BY
+    var params = querystring.stringify({
+      $select: 'col1,col2,@odata.etag',
+      $filter: 'co1 eq "help"',
+      $orderby: 'col2',
+      $skip: '10',
+      $debug:''
+    });
+
+    options.path = '/schema/table?' + params;
+    options.method = 'GET';
+
+    return remote.request(options, null);
+  })
   .then(function(res) {
       console.log(res);
 
@@ -296,6 +313,16 @@ remote.request(options, {
       return remote.request(options, {
           procedure: "spMyStoredProcedure",
           params: [1, 2]
+      });
+  })
+  .then(function(res) {
+      console.log(res);
+
+      options.path = '/schema/s/cmd';
+      options.method = 'POST';
+
+      return remote.request(options, {
+          cmd: "create view vwTest as select * from Test;"
       });
   })
   .done(console.log.bind(console), console.log.bind(console));

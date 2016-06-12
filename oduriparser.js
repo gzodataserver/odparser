@@ -206,6 +206,12 @@ var odata2sql = function (param, key) {
         }
       };
 
+    case '$debug':
+      return {
+        id: 99,
+        q: ''
+      };
+
     case '$top':
       throw Error('Unsupported query: ' + key);
 
@@ -323,7 +329,7 @@ var parseSystemUri = function (method, tokens) {
     tokens[1] === SYS_PATH && ['reset_password',
       'delete_account', 'create_bucket',
       'drop_bucket', 'create_table', 'grant', 'grant_bucket', 'revoke',
-      'revoke_bucket', 'delete_table', 'exec'
+      'revoke_bucket', 'delete_table', 'exec', 'cmd'
     ].indexOf(tokens[2]) !== -1) {
     return {
       queryType: tokens[2],
